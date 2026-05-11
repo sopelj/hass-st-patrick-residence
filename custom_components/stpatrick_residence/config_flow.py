@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-import contextlib
 from typing import TYPE_CHECKING, Any
 
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.const import CONF_PASSWORD
-
-from . import _LOGGER
 
 if TYPE_CHECKING:
     from homeassistant.data_entry_flow import FlowResult

@@ -22,13 +22,12 @@ if TYPE_CHECKING:
 type MenuConfigEntry = ConfigEntry[MenuUpdateCoordinator]
 
 
-PLATFORMS = [Platform.SENSOR,]
+PLATFORMS = [Platform.SENSOR]
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up St-Patrick Platform."""
-
     menu_coordinator = MenuUpdateCoordinator(
         hass,
         entry.data[CONF_PASSWORD],

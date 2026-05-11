@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
-from .const import DOMAIN
 from .api import LiveTourApi
+from .const import DOMAIN
 
 if TYPE_CHECKING:
     from .api import MenuData

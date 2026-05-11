@@ -11,5 +11,5 @@ MEAL_TYPE_MAPPING = {
     "Entrée": "appetizer",
     "Dîner": "lunch",
     "Dessert": "dessert",
-    "Souper": "dinner"
+    "Souper": "dinner",
 }

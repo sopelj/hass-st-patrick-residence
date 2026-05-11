@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-import logging
-from datetime import date, datetime
-from decimal import Decimal
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from homeassistant.components.sensor import (
     SensorEntity,

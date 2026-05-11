@@ -1,21 +1,17 @@
 """API for St Patrick's Residence."""
 from __future__ import annotations
 
-import re
 import json
+import re
 from collections import defaultdict
-from datetime import datetime
-from typing import TYPE_CHECKING, cast
+from typing import TYPE_CHECKING, NotRequired, TypedDict, cast
 
 import requests
 from bs4 import BeautifulSoup
-from googletrans import Translator
 
 from .const import BASE_URL, MEAL_TYPE_MAPPING
 
 if TYPE_CHECKING:
-    from typing import TypedDict, NotRequired
-    from requests import Session
 
     class ContentItem(TypedDict):
         IdContent: int
@@ -31,15 +27,17 @@ if TYPE_CHECKING:
         title: str
         content: str
 
-    class MenuMealData(TypedDict):
-        appetizer: NotRequired[str]
-        dessert: NotRequired[str]
-        choice_1: NotRequired[str]
-        choice_2: NotRequired[str]
 
-    class MenuData(TypedDict):
-        lunch: MenuMealData
-        dinner: MenuMealData
+class MenuMealData(TypedDict):
+    appetizer: NotRequired[str]
+    dessert: NotRequired[str]
+    choice_1: NotRequired[str]
+    choice_2: NotRequired[str]
+
+
+class MenuData(TypedDict):
+    lunch: MenuMealData
+    dinner: MenuMealData
 
 
 def br_to_nl(html) -> str:
@@ -103,13 +101,13 @@ class LiveTourApi:
         credentials = {"email": "", "login": "1", "passwd": self._password}
         # Post to login-check endpoint
         r = self._session.post(
-            f"{BASE_URL}/actions/login.check.ajax.php", data=credentials
+            f"{BASE_URL}/actions/login.check.ajax.php", data=credentials,
         )
         r.raise_for_status()
         assert r.content == b"success"
         # Now post again to index to get visitor ID Cookie
         r = self._session.post(
-            f"{BASE_URL}/index", data=credentials
+            f"{BASE_URL}/index", data=credentials,
         )
         r.raise_for_status()
 
