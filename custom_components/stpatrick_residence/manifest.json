@@ -1,0 +1,20 @@
+{
+  "domain": "stpatrick_residence",
+  "name": "St-Patrick Residence",
+  "codeowners": [
+    "@sopelj"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/sopelj/hass-st-patrick-residence",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/sopelj/hass-st-patrick-residence/issues",
+  "loggers": [
+    "stpatrick_residence"
+  ],
+  "requirements": [
+    "requests",
+    "beautifulsoup4",
+    "googletrans",
+  ],
+  "version": "1.0.0"
+}
