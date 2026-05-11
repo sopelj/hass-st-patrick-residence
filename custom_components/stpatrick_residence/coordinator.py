@@ -10,13 +10,10 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .api import LiveTourApi
 from .const import DOMAIN
-
-if TYPE_CHECKING:
-    from .api import MenuData
+from .api import MenuData
 
 
 _LOGGER = logging.getLogger(__name__)
-
 
 
 class MenuUpdateCoordinator(DataUpdateCoordinator[MenuData]):
