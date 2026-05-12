@@ -4,7 +4,7 @@ readme = "README.md"
 description = "Home Assistant Custom Integration to fetch the menu and other infor for the St-Patrick Residence system"
 authors = [{ name = "Jesse Sopel", email = "jesse@sopelj.ca" }]
 license = { file = "LICENSE.md" }
-requires-python = ">=3.14"
+requires-python = ">=3.14.2"
 dynamic = ["version"]
 classifiers = [
     "Intended Audience :: Developers",
@@ -14,7 +14,7 @@ classifiers = [
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "homeassistant>=2026.4.0",
+    "homeassistant>=2026.5.1",
     "googletrans",
     "requests",
     "beautifulsoup4",

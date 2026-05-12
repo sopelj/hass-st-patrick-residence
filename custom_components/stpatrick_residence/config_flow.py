@@ -8,6 +8,8 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.const import CONF_PASSWORD
 
+from .const import DOMAIN
+
 if TYPE_CHECKING:
     from homeassistant.data_entry_flow import FlowResult
 

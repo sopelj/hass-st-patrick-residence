@@ -14,6 +14,7 @@ if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
+    from .coordinator import MenuDataUpdateCoordinator
 
 
 SENSOR_TYPES = {
@@ -49,13 +50,13 @@ SENSOR_TYPES = {
 
 
 class MealItemSensor(CoordinatorEntity, SensorEntity):
-    """Representation of a Mug sensor."""
+    """Representation of a meal item."""
 
     _domain = "sensor"
 
     def __init__(
         self,
-        coordinator: MugDataUpdateCoordinator,
+        coordinator: MenuDataUpdateCoordinator,
         key: str,
     ) -> None:
         """Initialize the Mug sensor."""

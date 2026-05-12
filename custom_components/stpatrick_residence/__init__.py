@@ -33,7 +33,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         entry.data[CONF_PASSWORD],
     )
 
-    startup_task = hass.async_create_task(mug_coordinator.async_config_entry_first_refresh())
+    hass.async_create_task(menu_coordinator.async_config_entry_first_refresh())
 
     entry.runtime_data = menu_coordinator
     entry.async_on_unload(entry.add_update_listener(async_update_listener))

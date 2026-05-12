@@ -1,4 +1,4 @@
-"""Constants used for mug."""
+"""Constants used for integration."""
 
 from typing import Final
 
