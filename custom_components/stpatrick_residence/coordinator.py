@@ -6,6 +6,7 @@ import logging
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+from datetime import timedelta
 
 from .api import LiveTourApi, MenuData
 from .const import DOMAIN
@@ -25,7 +26,7 @@ class MenuUpdateCoordinator(DataUpdateCoordinator[MenuData]):
     ) -> None:
         """Initialize coordinator."""
         self._api = LiveTourApi(password)
-        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=60*60*60)
+        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=timedelta(minutes=60))
 
     async def _async_setup(self) -> None:
         """Set up API credentials."""
