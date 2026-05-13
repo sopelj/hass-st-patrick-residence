@@ -101,8 +101,9 @@ async def translate_item(text: str) -> str:
 class LiveTourApi:
     """API for St Patrick's Residence internal site."""
 
-    def __init__(self, password: str) -> None:
+    def __init__(self, client: httpx.AsyncClient, password: str) -> None:
         """Set credentials and cookies."""
+        self._client = client
         self._password = password
         self._cookies: httpx.Cookies = httpx.Cookies()
 
@@ -110,32 +111,30 @@ class LiveTourApi:
         """Perform the login flow on the session."""
         credentials = {"email": "", "login": "1", "passwd": self._password}
 
-        async with httpx.AsyncClient() as client:
-            # Post to login-check endpoint
-            r = await client.post(f"{BASE_URL}/actions/login.check.ajax.php", data=credentials, cookies=self._cookies)
-            r.raise_for_status()
+        # Post to login-check endpoint
+        r = await self._client.post(f"{BASE_URL}/actions/login.check.ajax.php", data=credentials, cookies=self._cookies)
+        r.raise_for_status()
 
-            if r.content != b"success":
-                raise ValueError("Login Failed")
+        if r.content != b"success":
+            raise ValueError("Login Failed")
 
-            # Now post again to index to get visitor ID Cookie
-            r = await client.post(
-                f"{BASE_URL}/index", data=credentials,
-            )
-            r.raise_for_status()
+        # Now post again to index to get visitor ID Cookie
+        r = await self._client.post(
+            f"{BASE_URL}/index", data=credentials,
+        )
+        r.raise_for_status()
 
-            # Store cookies with credentials
-            self._cookies.update(r.cookies)
+        # Store cookies with credentials
+        self._cookies.update(r.cookies)
 
     async def get_menu(self) -> bytes:
         """Get the raw menu html."""
-        async with httpx.AsyncClient() as client:
-            r = await client.get(
-                f"{BASE_URL}/load/residenceinfos-contents?section=menus",
-                cookies=self._cookies,
-            )
-            r.raise_for_status()
-            return r.content
+        r = await self._client.get(
+            f"{BASE_URL}/load/residenceinfos-contents?section=menus",
+            cookies=self._cookies,
+        )
+        r.raise_for_status()
+        return r.content
 
     async def get_menu_for_date(self, date_str: str) -> MenuData:
         """Get the menu for a specific date."""

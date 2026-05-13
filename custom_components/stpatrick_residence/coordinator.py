@@ -6,6 +6,7 @@ import logging
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
+from homeassistant.helpers.httpx_client import get_async_client
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .api import LiveTourApi, MenuData
@@ -29,7 +30,7 @@ class MenuUpdateCoordinator(DataUpdateCoordinator[MenuData]):
         password: str,
     ) -> None:
         """Initialize coordinator."""
-        self._api = LiveTourApi(password)
+        self._api = LiveTourApi(get_async_client(hass), password)
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=timedelta(minutes=60))
 
     async def _async_setup(self) -> None:
