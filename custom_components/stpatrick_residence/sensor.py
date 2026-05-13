@@ -8,14 +8,16 @@ from homeassistant.components.sensor import (
     SensorEntity,
     SensorEntityDescription,
 )
+from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+
+from .coordinator import MenuDataUpdateCoordinator
 
 if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.core import HomeAssistant
     from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-    from .coordinator import MenuDataUpdateCoordinator
 
 
 SENSOR_TYPES = {
@@ -42,7 +44,7 @@ SENSOR_TYPES = {
 }
 
 
-class MealItemSensor(CoordinatorEntity, SensorEntity):
+class MealItemSensor(CoordinatorEntity[MenuDataUpdateCoordinator], SensorEntity):
     """Representation of a meal item."""
 
     _domain = "sensor"
@@ -53,9 +55,19 @@ class MealItemSensor(CoordinatorEntity, SensorEntity):
         key: str,
     ) -> None:
         """Initialize the Mug sensor."""
-        self.entity_description = SENSOR_TYPES[key]
-        self.meal_type, self.item_type = key.split("_", 1)
         super().__init__(coordinator)
+        self.entity_description = SENSOR_TYPES[key]
+
+        self.meal_type, self.item_type = key.split("_", 1)
+        self._attr_unique_id = coordinator.config_entry.entry_id
+        self._attr_device_info = DeviceInfo(
+            identifiers={
+                (
+                    coordinator.config_entry.domain,
+                    coordinator.config_entry.entry_id,
+                ),
+            },
+        )
 
     @property
     def native_value(self) -> str | None:

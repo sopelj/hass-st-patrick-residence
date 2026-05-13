@@ -1,6 +1,9 @@
 """Constants used for integration."""
 
+from logging import Logger, getLogger
 from typing import Final
+
+LOGGER: Logger = getLogger(__package__)
 
 DOMAIN: Final[str] = "stpatrick_residence"
 CONFIG_VERSION = 1
