@@ -1,7 +1,7 @@
 [project]
 name = "stpatrick-residence-component"
 readme = "README.md"
-description = "Home Assistant Custom Integration to fetch the menu and other infor for the St-Patrick Residence system"
+description = "Home Assistant Custom Integration to fetch the menu and other info for the St-Patrick Residence system"
 authors = [{ name = "Jesse Sopel", email = "jesse@sopelj.ca" }]
 license = { file = "LICENSE.md" }
 requires-python = ">=3.14.2"
@@ -112,7 +112,9 @@ ignore = ["D203", "D212", "PLR2004", "PLR0913", "RUF012", "TRY003"]
 "tests/**/*.py" = [
     "D103",   # No docstrings in tests needed
     "S101",   # We needs asserts in tests
-    "SLF001",
+    "SLF001", # Private member access for testing
+    "E501", # Line to long in example data
+    "D100",  # Undocumented methods
 ]
 
 [tool.mypy]

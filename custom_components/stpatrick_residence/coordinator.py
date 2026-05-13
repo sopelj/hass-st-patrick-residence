@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
 import logging
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
+from typing import TYPE_CHECKING
 
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
@@ -37,5 +37,5 @@ class MenuUpdateCoordinator(DataUpdateCoordinator[MenuData]):
         await self._api.login()
 
     async def _async_update_data(self) -> list[MenuData]:
-        """Do the usual update"""
+        """Fetch new data from API endpoint."""
         return await self._api.get_menu_for_date(str(datetime.now().date()))

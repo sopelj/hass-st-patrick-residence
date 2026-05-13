@@ -1,3 +1,4 @@
+"""Test data for integration tests."""
 # Example data
 CONTENT_ITEM = {
     "IdContent": 0, "DateStart": "2026-05-07 19:00:00", "DateEnd": "2026-05-07 19:00:00", "Title": "",
