@@ -38,4 +38,6 @@ class MenuUpdateCoordinator(DataUpdateCoordinator[MenuData]):
 
     async def _async_update_data(self) -> list[MenuData]:
         """Fetch new data from API endpoint."""
-        return await self._api.get_menu_for_date(str(datetime.now().date()))
+        data = await self._api.get_menu_for_date(str(datetime.now().date()))
+        self.async_update_listeners()
+        return data
