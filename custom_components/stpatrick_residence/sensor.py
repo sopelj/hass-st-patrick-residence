@@ -23,10 +23,6 @@ SENSOR_TYPES = {
         key="lunch_main",
         icon="mdi:hamburger",
     ),
-    # "lunch_side": SensorEntityDescription(
-    #     key="lunch_side",
-    #     icon="mdi:french-fries",
-    # ),
     "lunch_dessert": SensorEntityDescription(
         key="lunch_main",
         icon="mdi:cookie",
@@ -39,10 +35,6 @@ SENSOR_TYPES = {
         key="dinner_main",
         icon="mdi:pasta",
     ),
-    # "dinner_side": SensorEntityDescription(
-    #     key="dinner_side",
-    #     icon="mdi:rice",
-    # ),
     "dinner_dessert": SensorEntityDescription(
         key="dinner_main",
         icon="mdi:cupcake",
@@ -62,13 +54,15 @@ class MealItemSensor(CoordinatorEntity, SensorEntity):
     ) -> None:
         """Initialize the Mug sensor."""
         self.entity_description = SENSOR_TYPES[key]
-        super().__init__(coordinator)
         self.meal_type, self.item_type = key.split("_", 1)
+        super().__init__(coordinator)
 
     @property
     def native_value(self) -> str | None:
         """Return the state of the sensor."""
-        return self.coordinator.data.get(self.meal_type, {}).get(self.item_type)
+        if data := self.coordinator.data:
+            return data.get(self.meal_type, {}).get(self.item_type)
+        return None
 
 
 async def async_setup_entry(
