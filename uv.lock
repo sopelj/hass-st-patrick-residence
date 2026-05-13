@@ -2331,7 +2331,7 @@ dependencies = [
     { name = "beautifulsoup4" },
     { name = "googletrans" },
     { name = "homeassistant" },
-    { name = "requests" },
+    { name = "httpx" },
 ]
 
 [package.optional-dependencies]
@@ -2347,11 +2347,11 @@ requires-dist = [
     { name = "beautifulsoup4" },
     { name = "googletrans" },
     { name = "homeassistant", specifier = ">=2026.5.1" },
+    { name = "httpx" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=9.0.0" },
     { name = "pytest-asyncio", marker = "extra == 'test'", specifier = ">=1.3.0" },
     { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=3.0.0" },
     { name = "pytest-homeassistant-custom-component", marker = "extra == 'test'" },
-    { name = "requests" },
 ]
 provides-extras = ["test"]
 

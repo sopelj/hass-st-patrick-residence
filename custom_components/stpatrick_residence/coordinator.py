@@ -2,14 +2,18 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 import logging
+from datetime import timedelta, datetime
 
-from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-from datetime import timedelta
 
 from .api import LiveTourApi, MenuData
 from .const import DOMAIN
+
+if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
+
 
 _LOGGER = logging.getLogger(__name__)
 

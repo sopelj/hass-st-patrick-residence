@@ -5,18 +5,14 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from homeassistant.const import (
-    CONF_PASSWORD,
-    Platform,
-)
-from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.const import CONF_PASSWORD, Platform
 
-from .const import CONFIG_VERSION, DOMAIN
+from .const import DOMAIN
 from .coordinator import MenuUpdateCoordinator
 
 if TYPE_CHECKING:
     from homeassistant.config_entries import ConfigEntry
-    from homeassistant.core import Event, HomeAssistant
+    from homeassistant.core import HomeAssistant
 
 
 type MenuConfigEntry = ConfigEntry[MenuUpdateCoordinator]
@@ -49,8 +45,6 @@ async def async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None
 async def async_unload_entry(hass: HomeAssistant, entry: MenuConfigEntry) -> bool:
     """Unload a config entry."""
     unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-    if unload_ok:
-        if not hass.config_entries.async_entries(DOMAIN):
-            hass.data.pop(DOMAIN)
-
+    if unload_ok and not hass.config_entries.async_entries(DOMAIN):
+        hass.data.pop(DOMAIN)
     return unload_ok

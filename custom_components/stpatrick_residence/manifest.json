@@ -12,7 +12,7 @@
     "stpatrick_residence"
   ],
   "requirements": [
-    "requests",
+    "httpx",
     "beautifulsoup4",
     "googletrans"
   ],

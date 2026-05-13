@@ -6,14 +6,17 @@ import re
 from collections import defaultdict
 from typing import TYPE_CHECKING, NotRequired, TypedDict, cast
 
-import requests
+import httpx
 from bs4 import BeautifulSoup
+from googletrans import Translator
 
 from .const import BASE_URL, MEAL_TYPE_MAPPING
 
 if TYPE_CHECKING:
 
     class ContentItem(TypedDict):
+        """Content item from the API."""
+
         IdContent: int
         DateStart: str
         DateEnd: str
@@ -23,12 +26,10 @@ if TYPE_CHECKING:
         Texte2: str
         Image: str
 
-    class MenuItem(TypedDict):
-        title: str
-        content: str
-
 
 class MenuMealData(TypedDict):
+    """Menu meal data."""
+
     appetizer: NotRequired[str]
     dessert: NotRequired[str]
     choice_1: NotRequired[str]
@@ -36,6 +37,8 @@ class MenuMealData(TypedDict):
 
 
 class MenuData(TypedDict):
+    """Menu data."""
+
     lunch: MenuMealData
     dinner: MenuMealData
 
@@ -52,7 +55,8 @@ def clean_text(html) -> str:
     return soup.get_text().strip()
 
 
-def extract_items(text: str, title: str = "") -> Menu:
+def extract_items(text: str, title: str = "") -> MenuMealData:
+    """Extract items from text and format them as meal items."""
     items = [i for t in text.split("\n") if (i := t.strip())]
     output = {}
     for i, item in enumerate(items):
@@ -63,10 +67,11 @@ def extract_items(text: str, title: str = "") -> Menu:
             output["appetizer"] = item
         else:
             output["dessert"] = item
-    return cast("Menu", output)
+    return cast("MenuMealData", output)
 
 
-def remap_item(item: ContentItem) -> tuple[str, MenuItem]:
+def remap_item(item: ContentItem) -> tuple[str, MenuMealData]:
+    """Remap the item to match the format of the menu."""
     content = clean_text(item["Texte"])
     parts = content.split("\n")
     main_meal_type = "lunch" if item["DateStart"].endswith("13:00:00") else "dinner"
@@ -87,38 +92,52 @@ def remap_item(item: ContentItem) -> tuple[str, MenuItem]:
     return main_meal_type, extract_items(content, other_type)
 
 
-async def translate_item(text: str):
-    return await translator.translate(content, src="fr", dest="en")
+async def translate_item(text: str) -> str:
+    """TRranslate text to English."""
+    async with Translator() as translator:
+        return await translator.translate(text, src="fr", dest="en")
 
 
 class LiveTourApi:
-    def __init__(self, password: str) -> None:
-        self._password = password
-        self._session = requests.Session()
+    """API for St Patrick's Residence internal site."""
 
-    def login(self) -> None:
+    def __init__(self, password: str) -> None:
+        """Set credentials and cookies."""
+        self._password = password
+        self._cookies: httpx.Cookies = httpx.Cookies()
+
+    async def login(self) -> None:
         """Perform the login flow on the session."""
         credentials = {"email": "", "login": "1", "passwd": self._password}
-        # Post to login-check endpoint
-        r = self._session.post(
-            f"{BASE_URL}/actions/login.check.ajax.php", data=credentials,
-        )
-        r.raise_for_status()
-        assert r.content == b"success"
-        # Now post again to index to get visitor ID Cookie
-        r = self._session.post(
-            f"{BASE_URL}/index", data=credentials,
-        )
-        r.raise_for_status()
 
-    def get_menu(self) -> bytes:
-        r = self._session.get(
-            f"{BASE_URL}/load/residenceinfos-contents?section=menus",
-        )
-        r.raise_for_status()
-        return r.content
+        async with httpx.AsyncClient() as client:
+            # Post to login-check endpoint
+            r = await client.post(f"{BASE_URL}/actions/login.check.ajax.php", data=credentials, cookies=self._cookies)
+            r.raise_for_status()
+            if r.content == b"success":
+                raise ValueError("Login Failed")
 
-    def get_menu_for_date(self, date_str: str) -> dict[str, str]:
+            # Now post again to index to get visitor ID Cookie
+            r = await client.post(
+                f"{BASE_URL}/index", data=credentials,
+            )
+            r.raise_for_status()
+
+            # Store cookies with credentials
+            self._cookies.update(r.cookies)
+
+    async def get_menu(self) -> bytes:
+        """Get the raw menu html."""
+        async with httpx.AsyncClient() as client:
+            r = client.get(
+                f"{BASE_URL}/load/residenceinfos-contents?section=menus",
+                cookies=self._cookies,
+            )
+            r.raise_for_status()
+            return r.content
+
+    async def get_menu_for_date(self, date_str: str) -> MenuData:
+        """Get the menu for a specific date."""
         content = self.get_menu()
         soup = BeautifulSoup(content, "html.parser")
         if not (script_tag := soup.find("script")):
@@ -137,7 +156,7 @@ class LiveTourApi:
         if not (today := data.get(date_str)):
             raise ValueError("No menu found for this date")
 
-        menu: dict[str, list[MenuData]] = defaultdict(dict)
+        menu: MenuData = defaultdict(dict)
         for item in sorted(today, key=lambda x: x["DateStart"]):
             title, remapped_item = remap_item(item)
             menu[title] |= remapped_item
