@@ -6,6 +6,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from homeassistant.const import CONF_PASSWORD, Platform
+from homeassistant.helpers.httpx_client import get_async_client
 
 from .const import DOMAIN, LOGGER
 from .coordinator import MenuUpdateCoordinator
@@ -27,6 +28,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     coordinator = MenuUpdateCoordinator(
         hass,
         logger=LOGGER,
+        client=get_async_client(hass),
         password=entry.data[CONF_PASSWORD],
     )
     entry.runtime_data = coordinator

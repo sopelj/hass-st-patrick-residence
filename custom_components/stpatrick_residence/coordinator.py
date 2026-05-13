@@ -5,7 +5,6 @@ from __future__ import annotations
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
-from homeassistant.helpers.httpx_client import get_async_client
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .api import LiveTourApi, MenuData
@@ -15,6 +14,7 @@ if TYPE_CHECKING:
     from logging import Logger
 
     from homeassistant.core import HomeAssistant
+    from httpx import AsyncClient
 
     from . import MenuConfigEntry
 
@@ -29,10 +29,11 @@ class MenuUpdateCoordinator(DataUpdateCoordinator[MenuData]):
         self,
         hass: HomeAssistant,
         logger: Logger,
+        client: AsyncClient,
         password: str,
     ) -> None:
         """Initialize coordinator."""
-        self._api = LiveTourApi(get_async_client(hass), password)
+        self._api = LiveTourApi(client, password)
         super().__init__(hass, logger, name=DOMAIN, update_interval=timedelta(hours=1))
 
     async def _async_setup(self) -> None:
