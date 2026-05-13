@@ -38,10 +38,12 @@ class MenuUpdateCoordinator(DataUpdateCoordinator[MenuData]):
     async def _async_setup(self) -> None:
         """Set up API credentials."""
         await self._api.login()
+        self.logger.debug("Successfully logged in to Live Tour API")
 
-    async def _async_update_data(self) -> list[MenuData]:
+    async def _async_update_data(self) -> MenuData:
         """Fetch new data from API endpoint."""
         try:
-            return await self._api.get_menu_for_date(str(datetime.now().date()))
+            data = await self._api.get_menu_for_date(str(datetime.now().date()))
+            self.logger.debug("Successfully fetched menu data: %s", data)
         except Exception as exception:
             raise UpdateFailed(exception) from exception

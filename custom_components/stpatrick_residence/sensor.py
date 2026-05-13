@@ -59,7 +59,7 @@ class MealItemSensor(CoordinatorEntity[MenuUpdateCoordinator], SensorEntity):
         self.entity_description = SENSOR_TYPES[key]
 
         self.meal_type, self.item_type = key.split("_", 1)
-        self._attr_unique_id = coordinator.config_entry.entry_id
+        self._attr_unique_id = f"{coordinator.config_entry.entry_id}_{self.meal_type}_{self.item_type}"
         self._attr_device_info = DeviceInfo(
             identifiers={
                 (
