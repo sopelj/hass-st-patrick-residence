@@ -114,7 +114,8 @@ class LiveTourApi:
             # Post to login-check endpoint
             r = await client.post(f"{BASE_URL}/actions/login.check.ajax.php", data=credentials, cookies=self._cookies)
             r.raise_for_status()
-            if r.content == b"success":
+
+            if r.content != b"success":
                 raise ValueError("Login Failed")
 
             # Now post again to index to get visitor ID Cookie
@@ -129,7 +130,7 @@ class LiveTourApi:
     async def get_menu(self) -> bytes:
         """Get the raw menu html."""
         async with httpx.AsyncClient() as client:
-            r = client.get(
+            r = await client.get(
                 f"{BASE_URL}/load/residenceinfos-contents?section=menus",
                 cookies=self._cookies,
             )
@@ -138,7 +139,7 @@ class LiveTourApi:
 
     async def get_menu_for_date(self, date_str: str) -> MenuData:
         """Get the menu for a specific date."""
-        content = self.get_menu()
+        content = await self.get_menu()
         soup = BeautifulSoup(content, "html.parser")
         if not (script_tag := soup.find("script")):
             raise ValueError("No soup found")
