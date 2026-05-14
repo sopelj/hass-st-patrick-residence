@@ -97,7 +97,7 @@ async def translate_meals(meal_data: MenuData) -> str:
     async with Translator() as translator:
         for meal in meal_data.values():
             for key, text in meal.items():
-                meal[key] = await translator.translate(text, src="fr", dest="en")
+                meal[key] = await translator.translate(text, "en", "fr")
         return meal_data
 
 
