@@ -21,20 +21,28 @@ if TYPE_CHECKING:
 
 
 SENSOR_TYPES = {
-    "lunch_main": SensorEntityDescription(
-        key="lunch_main",
+    "lunch_choice_1": SensorEntityDescription(
+        key="lunch_choice_1",
+        icon="mdi:hamburger",
+    ),
+    "lunch_choice_2": SensorEntityDescription(
+        key="lunch_choice_2",
         icon="mdi:hamburger",
     ),
     "lunch_dessert": SensorEntityDescription(
-        key="lunch_main",
+        key="lunch_dessert",
         icon="mdi:cookie",
     ),
     "dinner_appetizer": SensorEntityDescription(
         key="appetizer",
         icon="mdi:pot-mix",
     ),
-    "dinner_main": SensorEntityDescription(
-        key="dinner_main",
+    "dinner_choice_1": SensorEntityDescription(
+        key="dinner_choice_1",
+        icon="mdi:pasta",
+    ),
+    "dinner_choice_2": SensorEntityDescription(
+        key="dinner_choice_2",
         icon="mdi:pasta",
     ),
     "dinner_dessert": SensorEntityDescription(

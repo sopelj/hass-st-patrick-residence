@@ -92,10 +92,13 @@ def remap_item(item: ContentItem) -> tuple[str, MenuMealData]:
     return main_meal_type, extract_items(content, other_type)
 
 
-async def translate_item(text: str) -> str:
+async def translate_meals(meal_data: MenuData) -> str:
     """TRranslate text to English."""
     async with Translator() as translator:
-        return await translator.translate(text, src="fr", dest="en")
+        for meal in meal_data.values():
+            for key, text in meal.items():
+                meal[key] = await translator.translate(text, translator, src="fr", dest="en")
+        return meal_data
 
 
 class LiveTourApi:

@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api import LiveTourApi, MenuData
+from .api import LiveTourApi, MenuData, translate_meals
 from .const import DOMAIN
 
 if TYPE_CHECKING:
@@ -46,5 +46,6 @@ class MenuUpdateCoordinator(DataUpdateCoordinator[MenuData]):
         try:
             data = await self._api.get_menu_for_date(str(datetime.now().date()))
             self.logger.debug("Successfully fetched menu data: %s", data)
+            return await translate_meals(data)
         except Exception as exception:
             raise UpdateFailed(exception) from exception
