@@ -1,0 +1,27 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add St-Patrick integration",
+        "data": {
+          "name": "Name",
+          "password": "Password"
+        }
+      }
+    },
+    "abort": {
+      "unknown": "Unknown error occurred"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "lunch_choice_1": {"name": "Lunch - Choice 1"},
+      "lunch_choice_2": {"name": "Lunch - Choice 2"},
+      "lunch_dessert": {"name": "Lunch - Dessert"},
+      "dinner_appetizer": {"name": "Dinner - Dessert"},
+      "dinner_choice_1": {"name": "Dinner - Choice 1"},
+      "dinner_choice_2": {"name": "Dinner - Choice 2"},
+      "dinner_dessert": {"name": "Dinner - Dessert"}
+    }
+  }
+}

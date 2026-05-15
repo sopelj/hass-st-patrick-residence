@@ -65,6 +65,7 @@ class MealItemSensor(CoordinatorEntity[MenuUpdateCoordinator], SensorEntity):
         """Initialize the Mug sensor."""
         super().__init__(coordinator)
         self.entity_description = SENSOR_TYPES[key]
+        self._attr_translation_key = key
 
         self.meal_type, self.item_type = key.split("_", 1)
         self._attr_unique_id = f"{coordinator.config_entry.entry_id}_{self.meal_type}_{self.item_type}"
